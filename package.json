@@ -1,0 +1,17 @@
+{
+  "name": "lk-contract",
+  "version": "1.0.0",
+  "description": "Small tool for creating and testing HTTP contracts",
+  "main": "dist/lk-contract.cjs.js",
+  "scripts": {
+    "test": "node -r esm src/lk-contract.test.js"
+  },
+  "author": "luke kaalim",
+  "license": "MIT",
+  "devDependencies": {
+    "esm": "^3.2.25",
+    "lk-test": "^2.4.0",
+    "rollup": "^1.16.2",
+    "rollup-plugin-flow-entry": "^0.3.1"
+  }
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Getting a list of all users",
+    "request": {
+      "path": "/users"
+    },
+    "response": {
+      "body": "[{ \"id\": \"123\", \"name\": \"luke kaalim\" }]"
+    }
+  },
+  {
+    "name": "Adding a new user",
+    "request": {
+      "method": "POST",
+      "path": "/users",
+      "body": "\"john smith\""
+    },
+    "response": {
+      "body": "{ \"id\": \"54645363\", \"name\": \"john smith\" }"
+    }
+  }
+]
