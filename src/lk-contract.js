@@ -113,10 +113,12 @@ export const createMockServer = (
     res.end();
   };
   const server = createServer(listener);
-  const serverAddressObject = server.address();
-  server.listen(0, () => resolve({
-    address: serverAddressObject.address,
-    port: serverAddressObject.port,
-    close: () => new Promise(resolve => server.close(() => resolve()))
-  }));
+  server.listen(0, () => {
+    const serverAddressObject = server.address();
+    resolve({
+      address: serverAddressObject.address,
+      port: serverAddressObject.port,
+      close: () => new Promise(resolve => server.close(() => resolve()))
+    })
+  });
 });
