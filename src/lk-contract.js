@@ -90,7 +90,7 @@ export const createMockClient = (
 
 export const createMockServer = (
   contract/*: Contract*/
-)/*: Promise<{ origin: string, close: () => Promise<void> }>*/ => new Promise(resolve => {
+)/*: Promise<{ address: string, port: string, close: () => Promise<void> }>*/ => new Promise(resolve => {
   const listener = (inc, res) => {
     const headers = [];
     for (let i = 0; i < inc.rawHeaders.length / 2; i ++) {
@@ -113,8 +113,10 @@ export const createMockServer = (
     res.end();
   };
   const server = createServer(listener);
+  const serverAddressObject = server.address();
   server.listen(0, () => resolve({
-    origin: server.address().toString(),
+    address: serverAddressObject.address,
+    port: serverAddressObject.port,
     close: () => new Promise(resolve => server.close(() => resolve()))
   }));
 });
