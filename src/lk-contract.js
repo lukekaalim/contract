@@ -90,7 +90,7 @@ export const createMockClient = (
 
 export const createMockServer = (
   contract/*: Contract*/
-)/*: Promise<{ address: string, port: string, close: () => Promise<void> }>*/ => new Promise(resolve => {
+)/*: Promise<{ address: string, port: number, close: () => Promise<void> }>*/ => new Promise(resolve => {
   const listener = (inc, res) => {
     const headers = [];
     for (let i = 0; i < inc.rawHeaders.length / 2; i ++) {
