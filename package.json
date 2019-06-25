@@ -1,6 +1,6 @@
 {
   "name": "lk-contract",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Small tool for creating and testing HTTP contracts",
   "main": "dist/lk-contract.cjs.js",
   "scripts": {
