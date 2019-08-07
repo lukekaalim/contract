@@ -2,6 +2,8 @@
 
 Simple HTTP contract testing for node applications.
 
+[![CircleCI](https://circleci.com/gh/lukekaalim/contract.svg?style=svg)](https://circleci.com/gh/lukekaalim/contract)
+
 ## Install
 
 ```bash
