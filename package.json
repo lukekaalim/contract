@@ -4,12 +4,13 @@
   "description": "Small tool for creating and testing HTTP contracts",
   "main": "src/index",
   "scripts": {
-    "test": "node -r esm src/lk-contract.test.js"
+    "preversion": "npm test",
+    "test": "node test",
+    "postversion": "git push --follow-tags"
   },
   "author": "luke kaalim",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
     "@lukekaalim/test": "^4.5.2"
-  },
-  "devDependencies": {}
+  }
 }
