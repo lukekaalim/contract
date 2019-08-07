@@ -25,6 +25,9 @@ const createMockServer = (
       }
       res.statusCode = contract.response.status;
       res.write(contract.response.body);
+    } else {
+      res.statusCode = 404;
+      res.write(JSON.stringify({ type: 'contract-error', message: 'Failed to satisfy the contract' }));
     }
     res.end();
   };
