@@ -2,6 +2,8 @@
 const { createContract, createMockServer, createRequest, createResponse } = require('./');
 const { expectTrue, expectAll, expectEventually, colorReporter } = require('@lukekaalim/test');
 
+const { serverExpectation } = require('./src/server.test');
+
 const mockServerTest = expectEventually(async () => {
   const contract = createContract('testContract', createRequest('/users'), createResponse(JSON.stringify([])));
   const mockServer = createMockServer(contract);
@@ -18,8 +20,13 @@ const mockServerTest = expectEventually(async () => {
   return expectation;
 });
 
+const moduleExpectations = expectAll('@lukekalaim/contract', [
+  mockServerTest,
+  serverExpectation
+]);
+
 const runTests = async () => {
-  console.log(colorReporter(await mockServerTest.test()))
+  console.log(colorReporter(await moduleExpectations.test()))
 };
 
 runTests();
