@@ -1,6 +1,6 @@
 // @flow strict
 const { expect, assert, expectAll } = require('@lukekaalim/test');
-const { createMockServer } = require('./server');
+const { createContractServer, withContractServer } = require('./server');
 const { get } = require('http');
 
 const contract = {
@@ -19,7 +19,7 @@ const contract = {
 };
 
 const shouldReturnNotFound = expect(async () => {
-  const server = createMockServer(contract);
+  const server = createContractServer(contract);
   const { port } = await server.open();
   const incomingMessage = await new Promise(res => get(`http://localhost:${port}/not-the-correct-path`, {}, res));
   const assertion = assert('Expect the wrong path to return a 404 response', incomingMessage.statusCode === 404);
