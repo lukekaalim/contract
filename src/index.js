@@ -1,8 +1,10 @@
 // @flow strict
-const serverExports = require('./server');
-const contractExports = require('./contract');
+const { createContractServer, withContractServer } = require('./server');
+const { createContractClient, withContractClient } = require('./client');
+const { createContract, contractModel, createRequest, createResponse } = require('./contract');
 
 module.exports = {
-  ...serverExports,
-  ...contractExports,
+  createContractServer, withContractServer,
+  createContractClient, withContractClient,
+  createContract, contractModel, createRequest, createResponse
 };
