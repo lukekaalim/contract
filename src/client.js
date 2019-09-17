@@ -1,21 +1,30 @@
 // @flow strict
-const { request: httpRequest } = require('http');
-const { request: httpsRequest } = require('http');
+const { request } = require('http');
+const { succeed, fail } = require('@lukekaalim/result');
 /*::
 import type { Contract } from './contract';
+import type { Result } from '@lukekaalim/result';
 */
 /*::
 export type MockClient = {
-  start: () => Promise<void>,
+  execute: () => Promise<Result<void, Error>>,
 };
 */
 
-const createMockClient = request => (
+const readStream = stream => new Promise((resolve, reject) => {
+  const chunks = [];
+  stream.setEncoding('utf-8');
+  stream.on('data', data => chunks.push(data));
+  stream.on('error', error => reject(error));
+  stream.on('end', () => resolve(chunks.join('')));
+});
+
+const createContractClient = (
   contract/*: Contract*/,
-  origin/*: string*/
+  baseUrl/*: string*/
 )/*: MockClient*/ => {
-  const start = () => new Promise((resolve, reject) => {
-    const url = new URL(origin, contract.request.path);
+  const execute = () => new Promise((resolve, reject) => {
+    const url = new URL(contract.request.path, baseUrl);
     const headers = {};
     for (const [headerName, headerValue] of contract.request.headers) {
       headers[headerName] = headerValue;
@@ -24,10 +33,16 @@ const createMockClient = request => (
       method: contract.request.method,
       headers, 
     };
-    const clientRequest = request(url.href, requestOptions, response => {
-      response.on('error', (error) => reject(error))
-      response.on('end', () => resolve());
-    });
+    const onResponse = async (response) => {
+      const body = await readStream(response);
+      const statusCodeMatches = response.statusCode === contract.response.status;
+      if (statusCodeMatches) {
+        resolve(succeed());
+      } else {
+        resolve(fail(new Error(`Contract Status Code "${contract.response.status}" !== "${response.statusCode}"`)));
+      }
+    };
+    const clientRequest = request(url.href, requestOptions, r => void onResponse(r));
     if (contract.request.body) {
       clientRequest.write(contract.request.body);
     }
@@ -35,14 +50,24 @@ const createMockClient = request => (
   });
 
   return {
-    start,
+    execute,
   };
 };
 
-const createMockHttpClient = createMockClient(httpRequest);
-const createMockHttpsClient = createMockClient(httpsRequest);
+const withContractClient = async /*:: <T>*/(
+  contract/*: Contract*/,
+  baseUrl/*: string*/,
+  clientHandler/*: (client: MockClient) => (T | Promise<T>)*/,
+)/*: Promise<Result<T, Error>>*/ => {
+  try {
+    const client = createContractClient(contract, baseUrl);
+    return succeed(await clientHandler(client));
+  } catch (error) {
+    return fail(error);
+  }
+};
 
 module.exports = {
-  createMockHttpClient,
-  createMockHttpsClient,
+  createContractClient,
+  withContractClient,
 };

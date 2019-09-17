@@ -1,32 +1,17 @@
 // @flow strict
-const { createContract, createMockServer, createRequest, createResponse } = require('./');
-const { expectTrue, expectAll, expectEventually, colorReporter } = require('@lukekaalim/test');
+const { createContract, createContractServer, createRequest, createResponse } = require('./');
+const { expectTrue, expectAll, expect, emojiReporter } = require('@lukekaalim/test');
 
-const { serverExpectation } = require('./src/server.test');
+const { expectContractToValidate } = require('./src/contract.test');
 
-const mockServerTest = expectEventually(async () => {
-  const contract = createContract('testContract', createRequest('/users'), createResponse(JSON.stringify([])));
-  const mockServer = createMockServer(contract);
 
-  const { address, port } = await mockServer.open();
-
-  const expectation = expectAll('createMockServer()', [
-    expectTrue('The server should return an address', typeof address === 'string'),
-    expectTrue('The server should return an port', typeof port === 'number')
+const test = async () => {
+  const expectation = expectAll('@lukekalaim/contract', [
+    expectContractToValidate,
   ]);
-
-  mockServer.close();
-
-  return expectation;
-});
-
-const moduleExpectations = expectAll('@lukekalaim/contract', [
-  mockServerTest,
-  serverExpectation
-]);
-
-const runTests = async () => {
-  console.log(colorReporter(await moduleExpectations.test()))
+  const assertion = await expectation.test();
+  console.log(emojiReporter(assertion));
+  process.exitCode = assertion.validatesExpectation ? 0 : 1;
 };
 
-runTests();
+test();
