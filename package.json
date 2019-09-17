@@ -11,6 +11,10 @@
   "author": "luke kaalim",
   "license": "MIT",
   "devDependencies": {
-    "@lukekaalim/test": "^4.5.2"
+    "@lukekaalim/test": "^5.0.0"
+  },
+  "dependencies": {
+    "@lukekaalim/model": "^2.1.1",
+    "@lukekaalim/result": "^1.1.1"
   }
 }
